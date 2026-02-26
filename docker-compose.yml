@@ -1,0 +1,34 @@
+services:
+
+  frontend:
+    image: 23cs42_medha_frontend
+    build: ./frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+
+  backend:
+    image: 23cs42_medha_backend
+    build: ./backend
+    ports:
+      - "3000:3000"
+    environment:
+      DB_HOST: database
+      DB_USER: root
+      DB_PASS: root123
+      DB_NAME: studentdb
+    depends_on:
+      - database
+
+  database:
+    image: mysql:8.0
+    container_name: 23cs42_medha_db
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: studentdb
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:
