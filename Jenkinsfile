@@ -2,49 +2,38 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "medhashree05/frontend:v1"
-        CONTAINER_NAME = "frontend-test"
+        IMAGE_NAME = "medhashree/2023bcs0042_42"
     }
 
     stages {
 
-        stage('Checkout') {
+        stage('Checkout Code') {
             steps {
-                git branch: 'main',
-                    url: 'https://github.com/medhashree05/pipeline_app.git'
+                git 'https://github.com/medhashree_05/cloud-cicd-docker.git'
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                dir('frontend') {
-                    sh 'docker build -t $IMAGE_NAME .'
+                sh 'docker build -t $IMAGE_NAME .'
+            }
+        }
+
+        stage('Docker Login') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub',
+                usernameVariable: 'USER',
+                passwordVariable: 'PASS')]) {
+                    sh 'echo $PASS | docker login -u $USER --password-stdin'
                 }
             }
         }
 
-        stage('Run Container (Test)') {
+        stage('Push Docker Image') {
             steps {
-                sh '''
-                docker rm -f $CONTAINER_NAME || true
-                docker run -d -p 8081:80 --name $CONTAINER_NAME $IMAGE_NAME
-                '''
+                sh 'docker push $IMAGE_NAME'
             }
         }
 
-        stage('Test Application') {
-            steps {
-                sh '''
-                sleep 5
-                curl http://localhost:8081
-                '''
-            }
-        }
-    }
-
-    post {
-        always {
-            sh 'docker rm -f $CONTAINER_NAME || true'
-        }
     }
 }
