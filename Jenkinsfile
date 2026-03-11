@@ -9,7 +9,7 @@ pipeline {
 
         stage('Checkout Code') {
             steps {
-                git 'https://github.com/medhashree_05/pipeline_app'
+                git 'https://github.com/medhashree_05/pipeline_app.git'
             }
         }
 
