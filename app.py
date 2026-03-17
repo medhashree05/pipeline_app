@@ -5,9 +5,9 @@ app = Flask(__name__)
 @app.route("/")
 def home():
     return render_template("index.html",
-                           name="Medha Shree N",
-                           roll="0042",
-                           reg="2023BCS0042")
+                           name="Kethavath Murali",
+                           roll="0045",
+                           reg="2023BCD0008")
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
